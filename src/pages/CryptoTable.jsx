@@ -31,7 +31,7 @@ const columns = [
     title: 'VWAP(24Hr)',
     dataIndex: 'volumeUsd24Hr',
     key: 'volumeUsd24Hr',
-    render: (volume) => `$${Number(volume).toLocaleString()}$`,
+    render: (volume) => `${Number(volume).toLocaleString()}$`,
   },
   {
     title: 'Change (24Hr)',
@@ -82,7 +82,6 @@ function CryptoTable() {
   }
   return (
     <div style={{ padding: 24 }}>
-      <h1>CoinCap</h1>
       <Table
         dataSource={crypto}
         columns={columns}
