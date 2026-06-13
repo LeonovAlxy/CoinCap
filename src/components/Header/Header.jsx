@@ -1,9 +1,10 @@
-import { Layout, Typography, Flex } from 'antd';
+import { Layout, Typography, Flex, Space } from 'antd';
+import { DollarOutlined } from '@ant-design/icons';
 import PopularCrypto from '../common/PopularCrypto';
-import Account from '../../pages/Account';
+import AccountInfo from '../common/AccountInfo';
 
 const { Header: AntHeader } = Layout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Header = () => {
   return (
@@ -11,15 +12,21 @@ const Header = () => {
       style={{
         background: '#fff',
         height: 'auto',
+        padding: '12px 24px',
         lineHeight: 'normal',
-        display: 'flex',
         borderBottom: '1px solid #f0f0f0',
       }}
     >
-      <Flex justify="space-between" align="center" style={{ width: '100%' }}>
-        <PopularCrypto />
-        <Title style={{ color: 'blue', margin: 0 }}>CoinCap</Title>
-        <Account />
+      <Flex justify="space-between" wrap="wrap" gap="middle">
+        <Space align="start" size="small">
+          <Title style={{ margin: 0, color: '#1890ff' }}>CoinCap</Title>
+        </Space>
+        <Space>
+          <PopularCrypto />
+        </Space>
+        <Space>
+          <AccountInfo />
+        </Space>
       </Flex>
     </AntHeader>
   );

@@ -1,11 +1,14 @@
 import { useEffect } from 'react';
-import { Table, Spin, Alert, Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Table, Spin, Alert, Button, Card, Typography, Space, Tooltip } from 'antd';
+import { PlusOutlined, DollarOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCrypto, selectCrypto, selectLoading, selectErrors } from '../redux/cryptoSlice';
+import { buyCrypto } from '../utils/acc';
+
+const { Title, Text } = Typography;
 
 const handleClick = (data) => {
-  console.log(data);
+  buyCrypto(data);
 };
 
 const columns = [
@@ -13,86 +16,125 @@ const columns = [
     title: '№',
     dataIndex: 'rank',
     key: 'rank',
-    width: 40,
+    width: 60,
+    align: 'center',
   },
   {
+    title: 'Символ',
     dataIndex: 'symbol',
     key: 'symbol',
-    width: 40,
-    render: (symbol) => <span style={{ color: 'blue' }}>{symbol}</span>,
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-
-  {
-    title: 'VWAP(24Hr)',
-    dataIndex: 'volumeUsd24Hr',
-    key: 'volumeUsd24Hr',
-    render: (volume) => `${Number(volume).toLocaleString()}$`,
-  },
-  {
-    title: 'Change (24Hr)',
-    dataIndex: 'changePercent24Hr',
-    key: 'changePercent24Hr',
-    render: (change) => (
-      <span style={{ color: Number(change) >= 0 ? 'green' : 'red' }}>
-        {Number(change).toFixed(2)}%
-      </span>
+    width: 80,
+    align: 'center',
+    render: (symbol) => (
+      <Text strong style={{ color: '#1890ff' }}>
+        {symbol}
+      </Text>
     ),
   },
   {
-    title: 'Market Cap',
+    title: 'Название',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'VWAP (24ч)',
+    dataIndex: 'volumeUsd24Hr',
+    key: 'volumeUsd24Hr',
+    align: 'right',
+    render: (volume) => `$${Number(volume).toLocaleString()}`,
+  },
+  {
+    title: 'Изм. (24ч)',
+    dataIndex: 'changePercent24Hr',
+    key: 'changePercent24Hr',
+    align: 'right',
+    render: (change) => (
+      <Text style={{ color: Number(change) >= 0 ? '#52c41a' : '#ff4d4f', fontWeight: 500 }}>
+        {Number(change) >= 0 ? '+' : ''}
+        {Number(change).toFixed(2)}%
+      </Text>
+    ),
+  },
+  {
+    title: 'Рыночная капитализация',
     dataIndex: 'marketCapUsd',
     key: 'marketCapUsd',
-    render: (cap) => `${Number(cap).toLocaleString()}$`,
+    align: 'right',
+    render: (cap) => `$${Number(cap).toLocaleString()}`,
   },
   {
-    title: 'Price',
+    title: 'Цена (USD)',
     dataIndex: 'priceUsd',
     key: 'priceUsd',
-    render: (price) => `${Number(price).toLocaleString()}$`,
+    align: 'right',
+    render: (price) => <Text strong>${Number(price).toLocaleString()}</Text>,
   },
   {
-    dataIndex: 'symbol',
+    title: '',
     key: 'add',
-    render: (symbol) => (
-      <Button color="primary" variant="solid" onClick={() => handleClick(symbol)}>
-        <PlusOutlined />
-      </Button>
+    width: 60,
+    align: 'center',
+    render: (_, record) => (
+      <Tooltip title="Добавить в портфель">
+        <Button
+          type="primary"
+          shape="circle"
+          icon={<PlusOutlined />}
+          onClick={() => handleClick({ name: record.name, priceUsd: record.priceUsd })}
+        />
+      </Tooltip>
     ),
   },
 ];
 
 function CryptoTable() {
   const dispatch = useDispatch();
-
   const loading = useSelector(selectLoading);
   const errors = useSelector(selectErrors);
   const crypto = useSelector(selectCrypto);
+
   useEffect(() => {
     dispatch(fetchCrypto());
-  }, []);
+  }, [dispatch]);
 
   if (errors) return <Alert message="Ошибка" description={errors} type="error" showIcon />;
   if (loading) {
     return <Spin size="large" style={{ display: 'block', margin: '50px auto' }} />;
   }
+
   return (
-    <div style={{ padding: 24 }}>
-      <Table
-        dataSource={crypto}
-        columns={columns}
-        rowKey="id"
-        pagination={{
-          pageSize: 10,
-          placement: ['bottomCenter'],
-          showSizeChanger: false,
+    <div style={{ padding: 24, background: '#f0f2f5', minHeight: '100vh' }}>
+      <Card
+        style={{
+          borderRadius: 16,
+          boxShadow: '0 8px 20px rgba(0,0,0,0.05)',
         }}
-        bordered
-      />
+        bodyStyle={{ padding: '20px 24px' }}
+      >
+        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Space>
+              <DollarOutlined style={{ fontSize: 28, color: '#1890ff' }} />
+              <Title level={3} style={{ margin: 0 }}>
+                Рынок криптовалют
+              </Title>
+            </Space>
+          </div>
+
+          <Table
+            dataSource={crypto}
+            columns={columns}
+            rowKey="id"
+            pagination={{
+              pageSize: 10,
+              position: ['bottomCenter'],
+              showSizeChanger: false,
+              showQuickJumper: true,
+            }}
+            bordered
+          />
+        </Space>
+      </Card>
     </div>
   );
 }
