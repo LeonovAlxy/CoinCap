@@ -10,12 +10,21 @@ export const getCryptoAcc = () => {
 
 export const buyCrypto = (crypto) => {
   const cryptoAcc = getCryptoAcc();
-  cryptoAcc.push(crypto);
+  const existing = cryptoAcc.find((item) => item.name === crypto.name);
+  if (existing) {
+    existing.quantity += crypto.quantity;
+  } else {
+    cryptoAcc.push({ ...crypto });
+  }
   localStorage.setItem('cryptoAcc', JSON.stringify(cryptoAcc));
+  const total = cryptoAcc.reduce((sum, item) => sum + Number(item.priceUsd) * item.quantity, 0);
+  return total;
 };
 
 export const deleteCrypto = (index) => {
   const cryptoAcc = getCryptoAcc();
   cryptoAcc.splice(index, 1);
   localStorage.setItem('cryptoAcc', JSON.stringify(cryptoAcc));
+  const total = cryptoAcc.reduce((sum, item) => sum + Number(item.priceUsd) * item.quantity, 0);
+  return total;
 };

@@ -13,17 +13,25 @@ export const fetchCrypto = createAsyncThunk(
     }
   },
 );
-
+const loadTotalFromStorage = () => {
+  const saved = localStorage.getItem('totalCryptoAcc');
+  return saved !== null ? Number(JSON.parse(saved)) : 0;
+};
 const cryptoSlice = createSlice({
   name: 'crypto',
   initialState: {
     crypto: [],
     loading: false,
     errors: null,
+    totalAccCrypto: loadTotalFromStorage(),
   },
   reducers: {
     clearErrors: (state) => {
       state.errors = null;
+    },
+    renewTotalAccCrypto: (state, action) => {
+      state.totalAccCrypto = action.payload;
+      localStorage.setItem('totalCryptoAcc', JSON.stringify(action.payload));
     },
   },
   extraReducers: (builder) => {
@@ -47,9 +55,11 @@ const cryptoSlice = createSlice({
     selectCrypto: (state) => state.crypto,
     selectLoading: (state) => state.loading,
     selectErrors: (state) => state.errors,
+    selectTotalAccCrypto: (state) => state.totalAccCrypto,
   },
 });
 
-export const { clearErrors } = cryptoSlice.actions;
-export const { selectCrypto, selectLoading, selectErrors } = cryptoSlice.selectors;
+export const { clearErrors, renewTotalAccCrypto } = cryptoSlice.actions;
+export const { selectCrypto, selectLoading, selectErrors, selectTotalAccCrypto } =
+  cryptoSlice.selectors;
 export default cryptoSlice.reducer;

@@ -1,11 +1,12 @@
-import CryptoTable from '../../pages/CryptoTable';
 import Header from '../Header/Header';
-function Layout() {
+
+function Layout({ children }) {
   return (
     <>
       <Header />
-      <CryptoTable />
+      <main>{children}</main>
     </>
   );
 }
+
 export default Layout;

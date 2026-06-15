@@ -4,23 +4,23 @@ import { getCryptoAcc, deleteCrypto } from '../utils/acc';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
+import { selectTotalAccCrypto, renewTotalAccCrypto } from '../redux/cryptoSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const { Title, Text } = Typography;
 
 function Account() {
   const [crypto, setCrypto] = useState(getCryptoAcc());
-  const navigate = useNavigate();
 
-  const handleCloseWallet = () => {
-    navigate('/');
-  };
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const totalValue = useSelector(selectTotalAccCrypto);
 
   const handleDelete = (index) => {
-    deleteCrypto(index);
+    const newTotal = deleteCrypto(index);
+    dispatch(renewTotalAccCrypto(newTotal));
     setCrypto(getCryptoAcc());
   };
-
-  const totalValue = crypto.reduce((sum, item) => sum + Number(item.priceUsd), 0);
 
   const columns = [
     {
@@ -36,11 +36,25 @@ function Account() {
       key: 'name',
     },
     {
-      title: 'Цена (USD)',
+      title: 'Цена за ед. (USD)',
       dataIndex: 'priceUsd',
       key: 'priceUsd',
       align: 'right',
       render: (price) => `$${Number(price).toLocaleString()}`,
+    },
+    {
+      title: 'Количество',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      align: 'right',
+      render: (quantity) => quantity,
+    },
+
+    {
+      title: 'Итого (USD)',
+      key: 'total',
+      align: 'right',
+      render: (_, record) => `$${(Number(record.priceUsd) * record.quantity).toLocaleString()}`,
     },
     {
       title: '',
@@ -57,17 +71,12 @@ function Account() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      <Header />
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px' }}>
         <Card
-          style={{
-            borderRadius: 16,
-            boxShadow: '0 8px 20px rgba(0,0,0,0.05)',
-            marginBottom: 24,
-          }}
-          bodyStyle={{ padding: '20px 24px' }}
+          style={{ borderRadius: 16, boxShadow: '0 8px 20px rgba(0,0,0,0.05)', marginBottom: 24 }}
+          styles={{ body: { padding: '20px 24px' } }}
         >
-          <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
             <div
               style={{
                 display: 'flex',
@@ -86,7 +95,7 @@ function Account() {
                 <Button
                   type="default"
                   icon={<ArrowLeftOutlined />}
-                  onClick={handleCloseWallet}
+                  onClick={() => navigate('/')}
                   size="large"
                 >
                   На главную
@@ -116,10 +125,7 @@ function Account() {
               dataSource={crypto}
               columns={columns}
               rowKey="id"
-              pagination={{
-                pageSize: 10,
-                position: ['bottomCenter'],
-              }}
+              pagination={{ pageSize: 10, placement: ['bottomCenter'] }}
               bordered
               locale={{ emptyText: 'Портфель пуст' }}
               style={{ overflowX: 'auto' }}

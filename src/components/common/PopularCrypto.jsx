@@ -25,7 +25,7 @@ const PopularCrypto = () => {
               borderRadius: 8,
               boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
             }}
-            bodyStyle={{ padding: '12px 16px' }}
+            styles={{ body: { padding: '12px 16px' } }}
           >
             <Text strong style={{ display: 'block', fontSize: 14 }}>
               {item.name}

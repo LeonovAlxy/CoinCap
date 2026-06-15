@@ -1,11 +1,14 @@
 import { Flex, Typography } from 'antd';
 import { WalletOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectTotalAccCrypto } from '../../redux/cryptoSlice';
 
 const { Text } = Typography;
 
 const AccountInfo = () => {
-  const totalValue = 12345.67;
+  let totalValue = useSelector(selectTotalAccCrypto);
+
   const navigate = useNavigate();
   const handleClick = () => {
     navigate('/account');
