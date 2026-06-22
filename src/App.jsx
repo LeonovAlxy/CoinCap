@@ -6,9 +6,6 @@ import CryptoTable from './pages/CryptoTable';
 import Account from './pages/Account';
 import CryptoDetail from './pages/CryptoDetail';
 
-//в локале хранится только количество и название, суммы подгрузка(поиск в сторе по именам,чтоб не делать доп запрос).
-// в портфеле стоимость старая-фикс. тотал пересчет
-
 function App() {
   return (
     <Provider store={store}>

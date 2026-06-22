@@ -1,13 +1,11 @@
 import { Table, Button, Typography, Card, Space, Tooltip } from 'antd';
 import { CloseOutlined, ArrowLeftOutlined, WalletOutlined } from '@ant-design/icons';
 import { getCryptoAcc, deleteCrypto } from '../utils/acc';
-import { useState } from 'react';
-import Header from '../components/Header/Header';
-import { renewTotalAccCrypto } from '../redux/cryptoSlice';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { renewTotalAccCrypto } from '../redux/cryptoSlice';
 import { usePrices } from '../hooks/usePrices';
 import { useNavigate } from 'react-router-dom';
-import PriceCell from '../components/common/PriceCell';
 
 const { Title, Text } = Typography;
 
@@ -17,13 +15,16 @@ function Account() {
   const navigate = useNavigate();
 
   const symbols = crypto.map((item) => item.symbol);
-
   const { data: prices = {} } = usePrices(symbols);
 
   const totalValueRealTime = crypto.reduce((sum, item) => {
     const price = prices[item.symbol] || Number(item.priceUsd);
     return sum + price * item.quantity;
   }, 0);
+
+  useEffect(() => {
+    dispatch(renewTotalAccCrypto(totalValueRealTime));
+  }, [totalValueRealTime]);
 
   const handleDelete = (index) => {
     const newTotal = deleteCrypto(index);
@@ -37,14 +38,19 @@ function Account() {
     {
       title: 'Цена за ед. (USD)',
       key: 'price',
-      render: (_, record) => <PriceCell symbol={record.symbol} />,
+      render: (_, record) => {
+        const price = prices[record.symbol.toUpperCase()] || Number(record.priceUsd);
+        if (price === undefined || price === null || isNaN(price)) return <span>⏳</span>;
+        return <span>${price.toLocaleString()}</span>;
+      },
     },
     { title: 'Количество', dataIndex: 'quantity', key: 'quantity' },
     {
       title: 'Итого (USD)',
       key: 'total',
       render: (_, record) => {
-        const price = prices[record.symbol] || Number(record.priceUsd);
+        const price = prices[record.symbol.toUpperCase()] || Number(record.priceUsd);
+        if (!price || isNaN(price)) return <span>—</span>;
         return `$${(price * record.quantity).toLocaleString()}`;
       },
     },

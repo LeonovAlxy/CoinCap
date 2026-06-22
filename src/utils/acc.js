@@ -8,13 +8,6 @@ export const getCryptoAcc = () => {
   return JSON.parse(data);
 };
 
-export const getCryptoAccSymbols = () => {
-  const cryptoAcc = getCryptoAcc();
-  const cryptoAccSymbols = [];
-  cryptoAcc.forEach((item) => cryptoAccSymbols.push(item.symbol));
-  return cryptoAccSymbols;
-};
-
 export const buyCrypto = (crypto) => {
   const cryptoAcc = getCryptoAcc();
   const existing = cryptoAcc.find((item) => item.name === crypto.name);

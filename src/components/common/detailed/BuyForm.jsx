@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button, Card, Typography, Space, InputNumber } from 'antd';
-import { PlusOutlined, DollarOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { renewTotalAccCrypto } from '../../../redux/cryptoSlice';
 import { buyCrypto } from '../../../utils/acc';

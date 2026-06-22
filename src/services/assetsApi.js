@@ -11,17 +11,11 @@ export const fetchPricesBySymbols = async (symbols) => {
   if (!symbols || symbols.length === 0) return {};
   const unique = [...new Set(symbols.filter(Boolean))];
   const query = unique.join(',');
-  const response = await api.get(`/price/bysymbol/${query}`);
-
-  const priceArray = response.data.data;
+  const body = await api.get(`/price/bysymbol/${query}`);
+  const priceArray = body.data;
   const result = {};
   unique.forEach((symbol, index) => {
-    result[symbol] = Number(priceArray[index]);
+    result[symbol.toUpperCase()] = Number(priceArray[index]);
   });
   return result;
-};
-
-export const fetchPriceBySymbol = async (symbol) => {
-  const response = await api.get(`/price/bysymbol/${symbol}`);
-  return Number(response.data.data[0]);
 };

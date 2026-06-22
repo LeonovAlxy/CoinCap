@@ -14,7 +14,7 @@ const PopularCrypto = () => {
       {popular.map((item) => (
         <Card key={item.id} size="small">
           <Text strong>{item.symbol}</Text>
-          <Text>${Number(item.priceUsd).toLocaleString()}</Text>
+          <Text> $ {Number(item.priceUsd).toLocaleString()}</Text>
         </Card>
       ))}
     </Flex>

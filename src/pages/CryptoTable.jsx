@@ -11,7 +11,7 @@ import {
   Modal,
   InputNumber,
 } from 'antd';
-import { PlusOutlined, DollarOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import ModalBuyCrypto from '../components/common/ModalBuyCrypro';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '../hooks/useAssets';

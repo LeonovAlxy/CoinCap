@@ -11,7 +11,6 @@ import {
   Modal,
   InputNumber,
 } from 'antd';
-import { PlusOutlined, DollarOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { renewTotalAccCrypto } from '../../redux/cryptoSlice';
 import { buyCrypto } from '../../utils/acc';

@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App.jsx';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -10,6 +11,7 @@ const queryClient = new QueryClient({
       staleTime: 5000,
       refetchInterval: 5000,
       keepPreviousData: true,
+
       retry: 1,
     },
   },
@@ -20,6 +22,7 @@ createRoot(document.getElementById('root')).render(
     {' '}
     <QueryClientProvider client={queryClient}>
       <App />
+      <ReactQueryDevtools />
     </QueryClientProvider>
   </StrictMode>,
 );

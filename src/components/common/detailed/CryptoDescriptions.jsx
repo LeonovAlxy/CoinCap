@@ -1,6 +1,4 @@
 import { Descriptions } from 'antd';
-import Header from '../../Header/Header';
-import BuyForm from './BuyForm';
 
 function CryptoDescriptions({ crypto }) {
   return (
