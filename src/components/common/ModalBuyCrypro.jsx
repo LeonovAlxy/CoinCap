@@ -27,6 +27,7 @@ function ModalBuyCrypto({ selectedRecord, setSelectedRecord, isModalOpen, setIsM
     const cryptoWithQuantity = {
       name: selectedRecord.name,
       priceUsd: selectedRecord.priceUsd,
+      symbol: selectedRecord.symbol,
       quantity,
     };
     const newTotal = buyCrypto(cryptoWithQuantity);

@@ -16,6 +16,7 @@ function BuyForm({ crypto }) {
     const cryptoWithQuantity = {
       name: crypto.name,
       priceUsd: crypto.priceUsd,
+      symbol: crypto.symbol,
       quantity,
     };
     const newTotal = buyCrypto(cryptoWithQuantity);

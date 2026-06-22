@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Table,
   Spin,
@@ -12,35 +12,26 @@ import {
   InputNumber,
 } from 'antd';
 import { PlusOutlined, DollarOutlined } from '@ant-design/icons';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchCrypto, selectCrypto, selectLoading, selectErrors } from '../redux/cryptoSlice';
 import ModalBuyCrypto from '../components/common/ModalBuyCrypro';
 import { useNavigate } from 'react-router-dom';
+import { useAssets } from '../hooks/useAssets';
 
 const { Title, Text } = Typography;
 
 function CryptoTable() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { data: crypto = [], isLoading, isError, error } = useAssets();
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const loading = useSelector(selectLoading);
-  const errors = useSelector(selectErrors);
-  const crypto = useSelector(selectCrypto);
 
   const showBuyModal = (record) => {
     setSelectedRecord(record);
     setIsModalOpen(true);
   };
 
-  useEffect(() => {
-    dispatch(fetchCrypto());
-  }, [dispatch]);
-
-  if (errors) return <Alert message="Ошибка" description={errors} type="error" showIcon />;
-  if (loading) return <Spin size="large" style={{ display: 'block', margin: '50px auto' }} />;
+  if (isLoading) return <Spin size="large" style={{ display: 'block', margin: '50px auto' }} />;
+  if (isError) return <Alert message="Ошибка" description={error?.message} type="error" showIcon />;
 
   const columns = [
     { title: '№', dataIndex: 'rank', key: 'rank', width: 60, align: 'center' },
@@ -98,7 +89,6 @@ function CryptoTable() {
       title: '',
       key: 'add',
       width: 60,
-      align: 'center',
       render: (_, record) => (
         <Tooltip title="Добавить в портфель">
           <Button
@@ -117,34 +107,18 @@ function CryptoTable() {
 
   return (
     <div style={{ padding: 24, background: '#f0f2f5', minHeight: '100vh' }}>
-      <Card
-        style={{ borderRadius: 16, boxShadow: '0 8px 20px rgba(0,0,0,0.05)' }}
-        styles={{ body: { padding: '20px 24px' } }}
-      >
-        <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Space>
-              <DollarOutlined style={{ fontSize: 28, color: '#1890ff' }} />
-              <Title level={3} style={{ margin: 0 }}>
-                Рынок криптовалют
-              </Title>
-            </Space>
-          </div>
-
-          <Table
-            dataSource={crypto}
-            columns={columns}
-            rowKey="id"
-            pagination={{ pageSize: 10, showSizeChanger: false, showQuickJumper: true }}
-            bordered
-            onRow={(record) => ({
-              onClick: () => navigate(`/${record.id}`),
-              style: { cursor: 'pointer' },
-            })}
-          />
-        </Space>
+      <Card styles={{ body: { padding: '20px 24px' } }}>
+        <Table
+          dataSource={crypto}
+          columns={columns}
+          rowKey="id"
+          pagination={{ pageSize: 10 }}
+          onRow={(record) => ({
+            onClick: () => navigate(`/${record.id}`),
+            style: { cursor: 'pointer' },
+          })}
+        />
       </Card>
-
       <ModalBuyCrypto
         selectedRecord={selectedRecord}
         isModalOpen={isModalOpen}
