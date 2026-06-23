@@ -115,7 +115,7 @@ function CryptoTable() {
           rowKey="id"
           pagination={{ pageSize: 10 }}
           onRow={(record) => ({
-            onClick: () => navigate(`/${record.id}`),
+            onClick: () => navigate(`/detailed/${record.id}`),
             style: { cursor: 'pointer' },
           })}
         />
