@@ -57,6 +57,7 @@ function Account() {
     {
       title: '',
       key: 'delete',
+      align: 'center',
       render: (_, record, idx) => (
         <Tooltip title="Удалить">
           <Button danger icon={<CloseOutlined />} onClick={() => handleDelete(idx)} />
@@ -79,13 +80,21 @@ function Account() {
                 На главную
               </Button>
             </div>
-            <div style={{ background: '#f6ffed', padding: '12px 20px', borderRadius: 12 }}>
+            <div
+              style={{
+                background: '#f6ffed',
+                padding: '12px 20px',
+                borderRadius: 12,
+                border: '1px solid #b7eb8f',
+              }}
+            >
               <Text strong>Общая стоимость: </Text>
               <Text style={{ fontSize: 20, color: '#52c41a' }}>
                 ${totalValueRealTime.toLocaleString()}
               </Text>
             </div>
             <Table
+              className="portfolio-table"
               dataSource={crypto}
               columns={columns}
               rowKey="name"

@@ -11,7 +11,6 @@ const queryClient = new QueryClient({
       staleTime: 5000,
       refetchInterval: 5000,
       keepPreviousData: true,
-
       retry: 1,
     },
   },
