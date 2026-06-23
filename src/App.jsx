@@ -9,7 +9,7 @@ import CryptoDetail from './pages/CryptoDetail';
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter basename="/coincap/">
+      <BrowserRouter basename="/СoinСap">
         <Layout>
           <Routes>
             <Route path="/" element={<CryptoTable />} />
